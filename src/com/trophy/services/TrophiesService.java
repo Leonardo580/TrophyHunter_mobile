@@ -9,47 +9,41 @@ import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
-
 import com.codename1.ui.events.ActionListener;
-
-import com.trophy.entity.Games;
-import com.trophy.entity.Category;
+import com.trophy.entity.Trophies;
 import com.trophy.utils.Statics;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 /**
  *
  * @author anasb
  */
-public class GamesService {
-    public ArrayList<Games> games;
-    public static GamesService instance;
+public class TrophiesService {
+     public ArrayList<Trophies> trophies;
+    public static TrophiesService instance;
     public boolean resultOk;
     private ConnectionRequest req;
-    private GamesService(){
+    private TrophiesService(){
         req=new ConnectionRequest();
     }
-    public static GamesService getInstance(){
+    public static TrophiesService getInstance(){
         if (instance==null)
-            instance=new GamesService();
+            instance=new TrophiesService();
         return instance;
     }
-    private void setRequest(Games g){
-        req.addArgument("idGame",String.valueOf(g.getId_game()));
-        req.addArgument("category",String.valueOf(g.getCategory().getCategory()));
-        req.addArgument("name",String.valueOf(g.getName()));
+    private void setRequest(Trophies g){
+        req.addArgument("idTrophy",String.valueOf(g.getId_trophy()));
+        req.addArgument("title",String.valueOf(g.getTitle()));
+        req.addArgument("difficulity",String.valueOf(g.getDifficulty()));
         req.addArgument("description",String.valueOf(g.getDescription()));
-        req.addArgument("rate",String.valueOf(g.getRate()));
-        req.addArgument("img",String.valueOf(g.getImg()));
+        req.addArgument("platform",String.valueOf(g.getPlatform()));
+        req.addArgument("idGame",String.valueOf(g.getGame().getId_game()));
     }
-    public boolean addGame(Games g){
-        String url=Statics.BASE_URL+"admin/mobile/addGames";
+    public boolean addtrophy(Trophies g){
+        String url=Statics.BASE_URL+"admin/mobile/addTrophies";
         req.setUrl(url);
         setRequest(g);
         req.addResponseListener((new ActionListener < NetworkEvent >() {
@@ -64,8 +58,8 @@ public class GamesService {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOk;
     }
-    public boolean updateGame(Games g){
-        String url=Statics.BASE_URL+"admin/mobile/updateGames";
+    public boolean updatetrophy(Trophies g){
+        String url=Statics.BASE_URL+"admin/mobile/updateTrophies";
         req.setUrl(url);
         setRequest(g);
         
@@ -81,10 +75,10 @@ public class GamesService {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOk;
     }
-    public boolean deleteGame(Games g){
-        String url=Statics.BASE_URL+"admin/mobile/deleteGames";
+    public boolean deletetrophy(Trophies g){
+        String url=Statics.BASE_URL+"admin/mobile/deleteTrophies";
         req.setUrl(url);
-        req.addArgument("idGame",String.valueOf(g.getId_game()));
+        req.addArgument("idTrophy",String.valueOf(g.getId_trophy()));
         req.addResponseListener(new ActionListener < NetworkEvent >() {
             @Override
             public void actionPerformed(NetworkEvent arg0) {
@@ -97,28 +91,27 @@ public class GamesService {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOk;
     }
-    public ArrayList<Games> parseJSON(String jsonText) throws  IOException{
+    public ArrayList<Trophies> parseJSON(String jsonText) throws  IOException{
          try {
-            games=new ArrayList<>();
+            trophies=new ArrayList<>();
             JSONParser j = new JSONParser();
-            Map<String,Object> gamesListJson = 
+            Map<String,Object> trophiesListJson = 
                j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
            
-            List<Map<String,Object>> list = (List<Map<String,Object>>)gamesListJson.get("root");
-           games.clear();
+            List<Map<String,Object>> list = (List<Map<String,Object>>)trophiesListJson.get("root");
+            trophies.clear();
             for(Map<String,Object> obj : list){
-                Games t = new Games();
-             String id=obj.get("idGame").toString().substring(0,
-                     obj.get("idGame").toString().indexOf("."));
-                t.setId_game(Integer.parseInt(id));
-                t.setName(obj.get("name").toString());
-                String cat=obj.get("Category").toString();
-                cat=cat.substring(cat.indexOf("category"),cat.indexOf("category" )+1);
-                t.setCategory(new Category(cat));
-                t.setDescription(obj.get("description").toString());
-                t.setRate(Float.parseFloat(obj.get("rate").toString()));
-                t.setImg(obj.get("img").toString());
-                games.add(t);
+                Trophies t = new Trophies();
+             String id=obj.get("idTrophy").toString().substring(0,
+                     obj.get("idTrophy").toString().indexOf("."));
+             t.setId_trophy(Integer.parseInt(id));
+             t.setTitle(obj.get("title").toString());
+             t.setDescription(obj.get("description").toString());
+             t.setDifficulty(obj.get("difficulity").toString());
+             //t.setGame(game);
+             t.setPlatform(obj.get("platform").toString());
+             
+                trophies.add(t);
                   
             }
             
@@ -126,24 +119,25 @@ public class GamesService {
         } catch (IOException ex) {
             
         }
-        return games;
+        return trophies;
     }
-    public ArrayList<Games> getAllGames(){
-         String url=Statics.BASE_URL+"mobile/getGames";
+    public ArrayList<Trophies> getAllTrophies(){
+         String url=Statics.BASE_URL+"mobile/getTrophies";
         req.setUrl(url);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
              @Override
              public void actionPerformed(NetworkEvent arg0) {
               try {
-                 games= parseJSON(new String(req.getResponseData()));
+                 trophies= parseJSON(new String(req.getResponseData()));
               }
              catch (IOException ex) {
-                     //Logger.getLogger(GamesService.class.getName()).log(Level.SEVERE, null, ex);
+                     //Logger.getLogger(TrophiesService.class.getName()).log(Level.SEVERE, null, ex);
                  }
             req.removeResponseListener(this);
              }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
-        return games;
+        return trophies;
     }
+    
 }
