@@ -17,6 +17,8 @@ import com.codename1.io.NetworkEvent;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.entity.Trophies;
+import com.trophy.gui.GamesForm;
+import com.trophy.gui.LoginForm;
 import com.trophy.services.GamesService;
 import com.trophy.services.TrophiesService;
 
@@ -59,25 +61,9 @@ public class MyApplication {
         }
         Form hi = new Form("Hi World", BoxLayout.y());
         hi.add(new Label("Hi World"));
-        Games g=new Games();
-        g.setCategory(new Category("MMO"));
-        g.setDescription("mobile");
-        g.setName("test moblie ");
-        g.setRate(78.6f);
-        g.setImg("BackAssets\\images\\GameImgs\\wp7489322.jpg");
-        g.setId_game(122);
-        //boolean b=GamesService.getInstance().updateGame(g);
-        Trophies t=new Trophies();
-        t.setGame(g);
-        t.setDescription("mobile test update");
-        t.setPlatform("PS5");
-        t.setDifficulty("Hard");
-        t.setTitle("mobile");
-        t.setId_trophy(54);
-        System.out.println(TrophiesService.getInstance().deletetrophy(t));
-        SpanLabel ls=new SpanLabel();
-        hi.add(ls);
-        hi.show();
+        LoginForm lg=new LoginForm(theme);
+        lg.show();
+        
     }
 
     public void stop() {
