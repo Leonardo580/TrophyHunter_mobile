@@ -11,6 +11,8 @@ import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 
 import com.codename1.ui.events.ActionListener;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.trophy.entity.Games;
 import com.trophy.entity.Category;
@@ -20,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 /**
@@ -99,22 +100,29 @@ public class GamesService {
     }
     public ArrayList<Games> parseJSON(String jsonText) throws  IOException{
          try {
+             
             games=new ArrayList<>();
+            
             JSONParser j = new JSONParser();
             Map<String,Object> gamesListJson = 
                j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
            
             List<Map<String,Object>> list = (List<Map<String,Object>>)gamesListJson.get("root");
            games.clear();
+//             ObjectMapper ob=new ObjectMapper();
+//             JsonNode jn=ob.readTree(Json);
+            
             for(Map<String,Object> obj : list){
                 Games t = new Games();
              String id=obj.get("idGame").toString().substring(0,
                      obj.get("idGame").toString().indexOf("."));
                 t.setId_game(Integer.parseInt(id));
                 t.setName(obj.get("name").toString());
-                String cat=obj.get("Category").toString();
-                cat=cat.substring(cat.indexOf("category"),cat.indexOf("category" )+1);
-                t.setCategory(new Category(cat));
+                String cat=((Map<String,Object>)obj.get("Category")).get("category").toString();
+                id=((Map<String,Object>)obj.get("Category")).get("idCategory").toString();
+               id=id.substring(0,
+                     id.indexOf("."));
+                t.setCategory(new Category(Integer.parseInt(id),cat));
                 t.setDescription(obj.get("description").toString());
                 t.setRate(Float.parseFloat(obj.get("rate").toString()));
                 t.setImg(obj.get("img").toString());
@@ -145,5 +153,44 @@ public class GamesService {
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
         return games;
+    }
+    public Games parseOne(String jsonText) throws  IOException{
+        Games t = new Games(); 
+        try {
+             
+ 
+            
+            JSONParser j = new JSONParser();
+            Map<String,Object> gamesListJson = 
+               j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+           
+            Map<String,Object>obj = (Map<String,Object>)gamesListJson.get("root");
+         
+//             ObjectMapper ob=new ObjectMapper();
+//             JsonNode jn=ob.readTree(Json);
+            
+           
+                
+             String id=obj.get("idGame").toString().substring(0,
+                     obj.get("idGame").toString().indexOf("."));
+                t.setId_game(Integer.parseInt(id));
+                t.setName(obj.get("name").toString());
+                String cat=((Map<String,Object>)obj.get("Category")).get("category").toString();
+                id=((Map<String,Object>)obj.get("Category")).get("idCategory").toString();
+               id=id.substring(0,
+                     id.indexOf("."));
+                t.setCategory(new Category(Integer.parseInt(id),cat));
+                t.setDescription(obj.get("description").toString());
+                t.setRate(Float.parseFloat(obj.get("rate").toString()));
+                t.setImg(obj.get("img").toString());
+              
+                  
+            
+            
+            
+        } catch (IOException ex) {
+            
+        }
+        return t;
     }
 }

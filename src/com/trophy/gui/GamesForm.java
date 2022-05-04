@@ -4,6 +4,7 @@
  */
 package com.trophy.gui;
 
+import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.components.FileTree;
 import com.codename1.components.ImageViewer;
 import com.codename1.components.SpanLabel;
@@ -26,6 +27,7 @@ import com.trophy.services.GamesService;
 import com.trophy.utils.Statics;
 import java.util.ArrayList;
 
+
 /**
  *
  * @author anasb
@@ -33,10 +35,12 @@ import java.util.ArrayList;
 public class GamesForm extends SideMenuBaseForm{
 
     Form add;
-    
+    Resources r;
     public GamesForm(Resources res){
         super(BoxLayout.y());
+        r=res;
         Button menuButton = new Button("");
+        getAllStyles().setBgColor(DefaultRenderer.BACKGROUND_COLOR);
         menuButton.setUIID("Title");
         FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
         menuButton.addActionListener(e -> getToolbar().openSideMenu());
@@ -47,9 +51,9 @@ public class GamesForm extends SideMenuBaseForm{
             Container cn=new Container(BoxLayout.y());
             EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.png"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
-                    Statics.BASE_URL+g.getImg());
+                    Statics.BASE_URL+g.getImg(),URLImage.RESIZE_SCALE_TO_FILL);
           
-            ImageViewer imgv = new ImageViewer(imgs.scaled(150, 600));
+            ImageViewer imgv = new ImageViewer(imgs.scaled(200, 600));
            
             Label name=new Label(g.getName());
             Button btn=new Button();
@@ -63,7 +67,7 @@ public class GamesForm extends SideMenuBaseForm{
         this.add(cnt);
         add=SetUpAdd();
         setupSideMenu(res);       
-        getToolbar().addCommandToLeftSideMenu("Add Games", null, ev -> add.show());
+        getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_CIRCLE, ev -> add.show());
         getToolbar().setVisible(true);
        
     }
@@ -94,7 +98,7 @@ public class GamesForm extends SideMenuBaseForm{
             g.setRate(Float.parseFloat(tt.get(2).getText()));
             g.setCategory(new Category(tt.get(3).getText()));
             GamesService.getInstance().addGame(g);
-            this.show();
+            new GamesForm(r).show();
         });
         a.add(btn);
         a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());

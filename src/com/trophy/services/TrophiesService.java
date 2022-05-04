@@ -10,6 +10,8 @@ import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 import com.codename1.ui.events.ActionListener;
+import com.trophy.entity.Category;
+import com.trophy.entity.Games;
 import com.trophy.entity.Trophies;
 import com.trophy.utils.Statics;
 import java.io.IOException;
@@ -108,7 +110,27 @@ public class TrophiesService {
              t.setTitle(obj.get("title").toString());
              t.setDescription(obj.get("description").toString());
              t.setDifficulty(obj.get("difficulity").toString());
-             //t.setGame(game);
+                Games g = new Games();
+                Map<String, Object> obg=(Map<String, Object>)obj.get("idGame");
+                 id=obg.get("idGame").toString().substring(0,
+                     obg.get("idGame").toString().indexOf("."));
+                g.setId_game(Integer.parseInt(id));
+                g.setName(obg.get("name").toString());
+                String cat=((Map<String,Object>)obg.get("category")).get("category").toString();
+                id=((Map<String,Object>)obg.get("category")).get("idCategory").toString();
+               id=id.substring(0,id.indexOf("."));
+                g.setCategory(new Category(Integer.parseInt(id),cat));
+             
+                g.setDescription(obg.get("description").toString());
+                g.setRate(Float.parseFloat(obg.get("rate").toString()));
+                g.setImg(obg.get("img").toString());
+                
+             t.setGame(
+                     //GamesService.getInstance().parseJSON(
+                   //          obj.get("idGame").toString()
+                    // ).get(0)
+                     g
+             );
              t.setPlatform(obj.get("platform").toString());
              
                 trophies.add(t);

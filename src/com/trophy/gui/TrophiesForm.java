@@ -4,6 +4,7 @@
  */
 package com.trophy.gui;
 
+import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.components.FileTree;
 import com.codename1.components.ImageViewer;
 import com.codename1.components.SpanLabel;
@@ -37,14 +38,18 @@ public class TrophiesForm extends SideMenuBaseForm{
     protected void showOtherForm(Resources res) {
         
     }
-  
-
+  Resources r;
+  Games game;
     public TrophiesForm( Resources res,Games g) {
+        r=res;
+        game=g;
+        getAllStyles().setBgColor(DefaultRenderer.BACKGROUND_COLOR);
          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.png"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
                     Statics.BASE_URL+g.getImg());
           FormButton(this);
             ImageViewer imgv = new ImageViewer(imgs.scaled(800, 600));
+            
             Container cnt=new Container(BoxLayout.y());
             cnt.add(new Label(g.getName()));
             cnt.add(imgv);
@@ -76,12 +81,13 @@ public class TrophiesForm extends SideMenuBaseForm{
                     }
            
             add(cnt);
-            getToolbar().addMaterialCommandToLeftBar("Add ", FontImage.MATERIAL_ARROW_BACK, e->{addTrophy(g).show();});
-            getToolbar().addMaterialCommandToLeftBar("Back ", FontImage.MATERIAL_ARROW_BACK, e->{new GamesForm(res).show();});
-            getToolbar().addMaterialCommandToLeftBar("Delete ", FontImage.MATERIAL_ARROW_BACK, e->{
+             getToolbar().addMaterialCommandToLeftBar("Back ", FontImage.MATERIAL_ARROW_BACK, e->{new GamesForm(res).show();});
+            getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD, e->{addTrophy(g).show();});
+           
+            getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_DELETE, e->{
                 deleteGame(g);
                 new GamesForm(res).show();});
-                getToolbar().addMaterialCommandToLeftBar("Back ", FontImage.MATERIAL_ARROW_BACK, e->{updateGame(g).show();});
+                getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_UPDATE, e->{updateGame(g).show();});
             getToolbar().setVisible(true);
 
             
@@ -103,10 +109,16 @@ public class TrophiesForm extends SideMenuBaseForm{
             t.setGame(g);
            
             TrophiesService.getInstance().addtrophy(t);
+            new TrophiesForm(r, g).show();
         });
         cnt.addAll(new Label("Title"),tt,new Label("Description"),td,new Label("Platform"),cp,new Label("Difficulty"),cd,btn);
         f.add(cnt);
-         FormButton(f);
+         Button menuButton = new Button("");
+        menuButton.setUIID("Title");
+        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+        f.getToolbar().setTitleComponent(menuButton);
+         f.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
         return f;
     }
     private void FormButton(Form f){
@@ -130,10 +142,16 @@ public class TrophiesForm extends SideMenuBaseForm{
             t.setPlatform(cp.getSelectedItem().toString());
             t.setDifficulty(cd.getSelectedItem().toString());
             TrophiesService.getInstance().updatetrophy(t);
+            new TrophiesForm(r,game ).show();
         });
         cnt.addAll(new Label("Title"),tt,new Label("Description"),td,new Label("Platform"),cp,new Label("Difficulty"),cd,btn);
         f.add(cnt);
-        FormButton(f);
+        Button menuButton = new Button("");
+        menuButton.setUIID("Title");
+        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+        f.getToolbar().setTitleComponent(menuButton);
+        f.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
         return f;
     }
     public void deleteTrophy(Trophies t){
@@ -167,14 +185,18 @@ public class TrophiesForm extends SideMenuBaseForm{
             g.setRate(Float.parseFloat(tt.get(2).getText()));
             g.setCategory(new Category(tt.get(3).getText()));
             GamesService.getInstance().updateGame(g);
-            this.show();
+            new TrophiesForm(r, g).show();
         });
         a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
-        FormButton(a);
+        Button menuButton = new Button("");
+        menuButton.setUIID("Title");
+        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+        a.getToolbar().setTitleComponent(menuButton);
         return a;
     }
     public void deleteGame(Games g){
         GamesService.getInstance().deleteGame(g);
-        this.show();
+        new TrophiesForm(r, g).show();
     }
 }
