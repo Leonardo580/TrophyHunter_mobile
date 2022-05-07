@@ -55,7 +55,7 @@ public class ProfileForm extends BaseForm {
         tb.addSearchCommand(e -> {});
         
         
-        Image img = res.getImage("profile-background.jpg");
+        Image img = res.getImage("tof.jpg");
         if(img.getHeight() > Display.getInstance().getDisplayHeight() / 3) {
             img = img.scaledHeight(Display.getInstance().getDisplayHeight() / 3);
         }

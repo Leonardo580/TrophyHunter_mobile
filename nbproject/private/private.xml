@@ -3,6 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/MyApplication.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/mycompany/gui/SignInForm.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/services/ProductService.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/entity/Product.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/entity/Category.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/utils/Statics.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/trophy/services/GamesService.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/mycompany/gui/addProductForm.java</file>
+            <file>file:/E:/s8/mobile/TrophyHunter_mobile-Base/src/com/mycompany/gui/NewsfeedForm.java</file>
+        </group>
     </open-files>
 </project-private>
