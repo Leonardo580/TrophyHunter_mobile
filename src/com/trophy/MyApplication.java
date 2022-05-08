@@ -17,7 +17,8 @@ import com.codename1.io.NetworkEvent;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.entity.Trophies;
-import com.trophy.gui.GamesForm;
+import com.mycompany.gui.GamesForm;
+import com.mycompany.gui.SignInForm;
 import com.trophy.gui.LoginForm;
 import com.trophy.services.GamesService;
 import com.trophy.services.TrophiesService;
@@ -61,9 +62,7 @@ public class MyApplication {
         }
         Form hi = new Form("Hi World", BoxLayout.y());
         hi.add(new Label("Hi World"));
-        LoginForm lg=new LoginForm(theme);
-        
-        lg.show();
+         new SignInForm(theme).show();
         
         
     }

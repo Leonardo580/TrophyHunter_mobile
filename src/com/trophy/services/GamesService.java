@@ -193,4 +193,34 @@ public class GamesService {
         }
         return t;
     }
+    public void fetchOnline(Games g){
+        String url=Statics.BASE_URL+"admin/fetchOnline/"+g.getId_game();
+        req.setUrl(url);
+        req.addResponseListener(new ActionListener < NetworkEvent >() {
+            @Override
+            public void actionPerformed(NetworkEvent arg0) {
+                resultOk=req.getResponseCode()==200;
+           req.removeResponseListener(this);
+            }
+        });
+            
+     
+        NetworkManager.getInstance().addToQueueAndWait(req);
+    }
+    
+    public void TranslateOnline(Games g){
+        String url=Statics.BASE_URL+"admin/translate/"+g.getId_game();
+        req.setUrl(url);
+        req.addResponseListener(new ActionListener < NetworkEvent >() {
+            @Override
+            public void actionPerformed(NetworkEvent arg0) {
+                resultOk=req.getResponseCode()==200;
+           req.removeResponseListener(this);
+            }
+        });
+            
+     
+        NetworkManager.getInstance().addToQueueAndWait(req);
+    }
+    
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.trophy.gui;
+package com.mycompany.gui;
 
 import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.components.FileTree;
@@ -10,6 +10,7 @@ import com.codename1.components.ImageViewer;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
@@ -21,6 +22,7 @@ import com.codename1.ui.layouts.BoxLayout;
 
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.util.Resources;
+import com.mycompany.gui.BaseForm;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.services.GamesService;
@@ -32,13 +34,14 @@ import java.util.ArrayList;
  *
  * @author anasb
  */
-public class GamesForm extends SideMenuBaseForm{
+public class GamesForm extends BaseForm{
 
     Form add;
     Resources r;
     public GamesForm(Resources res){
         super(BoxLayout.y());
         r=res;
+        setScrollable(true);
         Button menuButton = new Button("");
         getAllStyles().setBgColor(DefaultRenderer.BACKGROUND_COLOR);
         menuButton.setUIID("Title");
@@ -49,13 +52,17 @@ public class GamesForm extends SideMenuBaseForm{
         Container cnt=new Container(new GridLayout(2));
         for (Games g: games){
             Container cn=new Container(BoxLayout.y());
-            EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.png"),false);
+            EncodedImage eimg=EncodedImage.createFromImage(res.getImage("icon.png"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
                     Statics.BASE_URL+g.getImg(),URLImage.RESIZE_SCALE_TO_FILL);
           
-            ImageViewer imgv = new ImageViewer(imgs.scaled(200, 600));
+            ImageViewer imgv = new ImageViewer(imgs.scaledHeight(
+                    Display.getInstance().getDisplayHeight()/3
+            ));
+                 
            
             Label name=new Label(g.getName());
+            name.setUIID("Label");
             Button btn=new Button();
             btn.addActionListener(l-> {
             new TrophiesForm(res, g).show();
@@ -66,24 +73,25 @@ public class GamesForm extends SideMenuBaseForm{
         }
         this.add(cnt);
         add=SetUpAdd();
-        setupSideMenu(res);       
+   //     setupSideMenu(res);     
+        addSideMenu(res);
         getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_CIRCLE, ev -> add.show());
         getToolbar().setVisible(true);
        
     }
-    @Override
-    protected void showOtherForm(Resources res) {
-        new ProfileForm(res).show();
-    }
+   
     public Form SetUpAdd(){
         Form a=new Form(BoxLayout.y());
         String s[]={"Name", "Description","Rate", "Category"};
       ArrayList<TextField> tt=new ArrayList<>();
         for (String v:s){
             TextField t=new TextField(null, v);
+            t.setUIID("TextFieldBlack");
             tt.add(t);
+            Label lab=new Label(v);
+            lab.setUIID("Label");
             a.add(new Container(BoxLayout.x()).addAll(
-                    new Label(v),t
+                    lab,t
             ));
             
         }

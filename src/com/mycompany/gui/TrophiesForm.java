@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.trophy.gui;
+package com.mycompany.gui;
 
+import com.mycompany.gui.GamesForm;
 import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.components.FileTree;
 import com.codename1.components.ImageViewer;
@@ -16,6 +17,7 @@ import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
+import com.codename1.ui.TextArea;
 import com.codename1.ui.TextField;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BoxLayout;
@@ -23,6 +25,7 @@ import com.codename1.ui.util.Resources;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.entity.Trophies;
+import com.trophy.gui.SideMenuBaseForm;
 import com.trophy.services.GamesService;
 import com.trophy.services.TrophiesService;
 import com.trophy.utils.Statics;
@@ -32,19 +35,15 @@ import java.util.ArrayList;
  *
  * @author anasb
  */
-public class TrophiesForm extends SideMenuBaseForm{
+public class TrophiesForm extends BaseForm{
 
-    @Override
-    protected void showOtherForm(Resources res) {
-        
-    }
   Resources r;
   Games game;
     public TrophiesForm( Resources res,Games g) {
         r=res;
         game=g;
         getAllStyles().setBgColor(DefaultRenderer.BACKGROUND_COLOR);
-         EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.png"),false);
+         EncodedImage eimg=EncodedImage.createFromImage(res.getImage("icon.png"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
                     Statics.BASE_URL+g.getImg());
           FormButton(this);
@@ -57,7 +56,7 @@ public class TrophiesForm extends SideMenuBaseForm{
             cnt.add(new Label("Rate"+g.getRate()));
             cnt.add(new Label("Category"+g.getCategory().getCategory()));
             for (Trophies t : TrophiesService.getInstance().getAllTrophies())
-                    //if(t.getGame().getId_game()==g.getId_game()) 
+                    if(t.getGame().getId_game()==g.getId_game()) 
                     {
                         Container c=new Container(BoxLayout.x());
                         c.addAll(new Label(t.getTitle()),
@@ -68,7 +67,7 @@ public class TrophiesForm extends SideMenuBaseForm{
                         Button update=new Button("Update");
                         Button delete=new Button("Delete");
                         update.addActionListener(l-> {
-                        updateTrophy(t);
+                        updateTrophy(t).show();
                         });
                         delete.addActionListener(l-> {
                         c.remove();
@@ -88,6 +87,14 @@ public class TrophiesForm extends SideMenuBaseForm{
                 deleteGame(g);
                 new GamesForm(res).show();});
                 getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_UPDATE, e->{updateGame(g).show();});
+                getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ARROW_CIRCLE_DOWN, e->{
+                    GamesService.getInstance().fetchOnline(g);
+                    new TrophiesForm(r, g).show();
+                });
+                getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_TEXT_FORMAT, e->{
+                    GamesService.getInstance().TranslateOnline(g);
+                    new TrophiesForm(r, g).show();
+                });
             getToolbar().setVisible(true);
 
             
@@ -96,7 +103,9 @@ public class TrophiesForm extends SideMenuBaseForm{
         Form f=new Form(BoxLayout.y());
         Container cnt=new Container(BoxLayout.y());
         TextField tt=new TextField();
+        tt.setUIID("TextFieldBlack");
         TextField td=new TextField();
+        td.setUIID("TextFieldBlack");
         ComboBox<String> cd=new ComboBox<>("Very Easy", "Easy", "Medium", "Hard", "Very Hard");
         ComboBox<String> cp=new ComboBox<>("PS4", "PS5", "XBox Series X|S", "XBox One", "Nintendo Switch", "PC" );
         Button btn=new Button("Add Trophy");
@@ -111,7 +120,9 @@ public class TrophiesForm extends SideMenuBaseForm{
             TrophiesService.getInstance().addtrophy(t);
             new TrophiesForm(r, g).show();
         });
-        cnt.addAll(new Label("Title"),tt,new Label("Description"),td,new Label("Platform"),cp,new Label("Difficulty"),cd,btn);
+        
+        cnt.addAll(new Label("Title", "Label"),tt,new Label("Description", "Label")
+                ,td,new Label("Platform", "Label"),cp,new Label("Difficulty", "Label"),cd,btn);
         f.add(cnt);
          Button menuButton = new Button("");
         menuButton.setUIID("Title");
@@ -130,12 +141,19 @@ public class TrophiesForm extends SideMenuBaseForm{
     }
     public Form updateTrophy(Trophies t){
         Form f=new Form(BoxLayout.y());
+        
         Container cnt=new Container(BoxLayout.y());
         TextField tt=new TextField();
-        TextField td=new TextField();
+        tt.setUIID("TextFieldBlack");
+        TextArea td=new TextArea();
+        td.setUIID("TextFieldBlack");
         ComboBox<String> cd=new ComboBox<>("Very Easy", "Easy", "Medium", "Hard", "Very Hard");
         ComboBox<String> cp=new ComboBox<>("PS4", "PS5", "XBox Series X|S", "XBox One", "Nintendo Switch", "PC" );
         Button btn=new Button("Update Trophy");
+        tt.setText(t.getTitle());
+        td.setText(t.getDescription());
+        cp.setSelectedItem(t.getPlatform());
+        cd.setSelectedItem(t.getDifficulty());
         btn.addActionListener(l-> {
             t.setTitle(tt.getText());
             t.setDescription(td.getText());
@@ -144,7 +162,10 @@ public class TrophiesForm extends SideMenuBaseForm{
             TrophiesService.getInstance().updatetrophy(t);
             new TrophiesForm(r,game ).show();
         });
-        cnt.addAll(new Label("Title"),tt,new Label("Description"),td,new Label("Platform"),cp,new Label("Difficulty"),cd,btn);
+        cnt.addAll(new Label("Title", "Label")
+                ,tt,new Label("Description", "Label")
+                ,td,new Label("Platform", "Label")
+                ,cp,new Label("Difficulty", "Label"),cd,btn);
         f.add(cnt);
         Button menuButton = new Button("");
         menuButton.setUIID("Title");
@@ -160,17 +181,23 @@ public class TrophiesForm extends SideMenuBaseForm{
     public Form updateGame(Games g){
         Form a=new Form(BoxLayout.y());
         String s[]={"Name", "Description","Rate", "Category"};
+        TextArea td=new TextArea();
       ArrayList<TextField> tt=new ArrayList<>();
         for (String v:s){
             TextField t=new TextField(null, v);
+            t.setUIID("TextFieldBlack");
             tt.add(t);
+            if(v.equals("Description"))
             a.add(new Container(BoxLayout.x()).addAll(
-                    new Label(v),t
+                    new Label(v, "Label"),td
+                    
             ));
-            
+            else 
+             a.add(new Container(BoxLayout.x()).addAll(
+                    new Label(v, "Label"),t));
         }
         tt.get(0).setText(g.getName());
-        tt.get(1).setText(g.getDescription());
+        td.setText(g.getDescription());
         tt.get(2).setText(String.valueOf(g.getRate()));
         tt.get(3).setText(g.getCategory().getCategory());
 
@@ -181,12 +208,13 @@ public class TrophiesForm extends SideMenuBaseForm{
         Button btn=new Button("Update Game");
         btn.addActionListener(l-> {
             g.setName(tt.get(0).getText());
-            g.setDescription(tt.get(1).getText());
+            g.setDescription(td.getText());
             g.setRate(Float.parseFloat(tt.get(2).getText()));
             g.setCategory(new Category(tt.get(3).getText()));
             GamesService.getInstance().updateGame(g);
             new TrophiesForm(r, g).show();
         });
+        a.add(btn);
         a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
         Button menuButton = new Button("");
         menuButton.setUIID("Title");
@@ -197,6 +225,6 @@ public class TrophiesForm extends SideMenuBaseForm{
     }
     public void deleteGame(Games g){
         GamesService.getInstance().deleteGame(g);
-        new TrophiesForm(r, g).show();
+        new GamesForm(r).show();
     }
 }
