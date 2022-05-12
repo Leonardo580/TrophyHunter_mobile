@@ -19,6 +19,8 @@
 
 package com.mycompany.gui;
 
+import com.codename1.components.FileTree;
+import com.codename1.components.ImageViewer;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
@@ -27,21 +29,32 @@ import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
+import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
+import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
+import com.codename1.ui.spinner.Picker;
 import com.codename1.ui.util.Resources;
+import com.trophy.entity.Category;
+import com.trophy.entity.Product;
+import com.trophy.services.CategoryService;
+import com.trophy.services.ProductService;
+import com.trophy.utils.Statics;
+import java.util.ArrayList;
 
 /**
  * The newsfeed form
@@ -49,13 +62,14 @@ import com.codename1.ui.util.Resources;
  * @author Shai Almog
  */
 public class NewsfeedForm extends BaseForm {
-
+ Form add;
+  Resources r;
     public NewsfeedForm(Resources res) {
         super("Newsfeed", BoxLayout.y());
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Newsfeed");
+        setTitle("Shop Management");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -65,7 +79,7 @@ public class NewsfeedForm extends BaseForm {
 
         Label spacer1 = new Label();
         Label spacer2 = new Label();
-        addTab(swipe, res.getImage("news-item.jpg"), spacer1, "15 Likes  ", "85 Comments", "Integer ut placerat purued non dignissim neque. ");
+        addTab(swipe, res.getImage("avatar-2.jpg"), spacer1, "15 Likes  ", "85 Comments", "Welcome to Trophy Hunter  ");
         addTab(swipe, res.getImage("dog.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
                 
         swipe.setUIID("Container");
@@ -109,9 +123,9 @@ public class NewsfeedForm extends BaseForm {
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton all = RadioButton.createToggle("All", barGroup);
         all.setUIID("SelectBar");
-        RadioButton featured = RadioButton.createToggle("Featured", barGroup);
+        RadioButton featured = RadioButton.createToggle("Products", barGroup);
         featured.setUIID("SelectBar");
-        RadioButton popular = RadioButton.createToggle("Popular", barGroup);
+        RadioButton popular = RadioButton.createToggle("Categories", barGroup);
         popular.setUIID("SelectBar");
         RadioButton myFavorite = RadioButton.createToggle("My Favorites", barGroup);
         myFavorite.setUIID("SelectBar");
@@ -138,11 +152,96 @@ public class NewsfeedForm extends BaseForm {
             updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
         });
         
-        addButton(res.getImage("news-item-1.jpg"), "Morbi per tincidunt tellus sit of amet eros laoreet.", false, 26, 32);
-        addButton(res.getImage("news-item-2.jpg"), "Fusce ornare cursus masspretium tortor integer placera.", true, 15, 21);
-        addButton(res.getImage("news-item-3.jpg"), "Maecenas eu risus blanscelerisque massa non amcorpe.", false, 36, 15);
-        addButton(res.getImage("news-item-4.jpg"), "Pellentesque non lorem diam. Proin at ex sollicia.", false, 11, 9);
+        ArrayList<Category>listc = CategoryService.getInstance().displayCategories();
+        Container cnt=new Container(new GridLayout(2));   
+        for(Category c :listc){
+         Container cnc=new Container(BoxLayout.y());
+        Label namec=new Label(c.getCategory());     
+        cnc.add(namec);
+        cnt.add(cnc);
+        
+        }
+             
+        ArrayList<Product>list = ProductService.getInstance().displayProduct();
+        
+//        
+        for(Product p :list){
+         Container cn=new Container(BoxLayout.y());
+          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.jpg"),false);
+            Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),
+                    Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),URLImage.RESIZE_SCALE_TO_FILL);
+//             ImageViewer imgv = new ImageViewer(imgs.scaledHeight(
+//                    Display.getInstance().getDisplayHeight()/3
+//            ));
+            ImageViewer imgv = new ImageViewer(imgs.scaled(500, 500));
+        Label name=new Label(p.getProdName());
+        name.setUIID("Label");
+         Label desc =new Label(p.getDescription());
+       cn.addAll(imgv,name);
+        cnt.add(cn);
+        }
+        
+        
+              
+//        getToolbar().setVisible(true);
+        this.add(cnt);
+//        add=SetUpAdd();
+    
+   //     setupSideMenu(res);    
+   //     setupSideMenu(res);     
+        
+        getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_CIRCLE, ev -> add.show());
+        getToolbar().setVisible(true);
+//        addButton(res.getImage("news-item-1.jpg"), "Morbi per tincidunt tellus sit of amet eros laoreet.", false, 26, 32);
+//        addButton(res.getImage("news-item-2.jpg"), "Fusce ornare cursus masspretium tortor integer placera.", true, 15, 21);
+//        addButton(res.getImage("news-item-3.jpg"), "Maecenas eu risus blanscelerisque massa non amcorpe.", false, 36, 15);
+//        addButton(res.getImage("news-item-4.jpg"), "Pellentesque non lorem diam. Proin at ex sollicia.", false, 11, 9);
     }
+   //tbda houni
+//     public Form SetUpAdd(){
+//     Form a=new Form(BoxLayout.y());
+//        String s[]={"prodName", "description","price","discount","Quantity"};
+//         Picker stringPicker = new Picker();
+//           
+//      ArrayList<TextField> tt=new ArrayList<>();
+//        for (String v:s){
+//            TextField t=new TextField(null, v);
+//            t.setUIID("TextFieldBlack");
+//            tt.add(t);
+//            
+//            Label lab=new Label(v);
+//            lab.setUIID("Label");
+//            a.add(new Container(BoxLayout.x()).addAll(
+//                    lab,t
+//            ));
+//            
+//        }
+//        a.add(new Container(BoxLayout.x()).addAll(
+//                    new Label("Image"),new FileTree()
+//            ));
+//        Button btn=new Button("Add Product");
+//        btn.addActionListener(l-> {
+//            Product p=new Product();
+//            p.setProdName(tt.get(1).getText());
+//            p.setDescription(tt.get(2).getText());
+//            p.setPrice(Float.parseFloat(tt.get(3).getText()));
+//            p.setDiscount(Float.parseFloat(tt.get(4).getText()));
+//            p.setCategory(new Category(tt.get(7).getText()));
+//            p.setQuantity((int)Float.parseFloat(tt.get(5).getText()));
+//            ProductService.getInstance().addProduct(p);
+//            new NewsfeedForm(r).show();
+//        });
+//        a.add(btn);
+//        a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
+//        Button menuButton = new Button("");
+//        menuButton.setUIID("Title");
+//        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+//        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+//        a.getToolbar().setTitleComponent(menuButton);
+//        return a;
+//    
+//     }
+     //toufa houni
     
     private void updateArrowPosition(Button b, Label arrow) {
         arrow.getUnselectedStyle().setMargin(LEFT, b.getX() + b.getWidth() / 2 - arrow.getWidth() / 2);

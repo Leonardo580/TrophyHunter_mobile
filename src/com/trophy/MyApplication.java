@@ -14,6 +14,7 @@ import com.codename1.ui.Toolbar;
 import java.io.IOException;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.io.NetworkEvent;
+import com.mycompany.gui.DisplayCategory;
 import com.mycompany.gui.SignInForm;
 import com.mycompany.gui.addProductForm;
 import com.trophy.entity.Category;
@@ -60,6 +61,7 @@ public class MyApplication {
         }
         //new addProductForm(theme).show();
         new SignInForm(theme).show();
+      // new DisplayCategory(theme).show();
     }
 
     public void stop() {

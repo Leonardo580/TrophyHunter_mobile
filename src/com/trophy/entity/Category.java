@@ -3,7 +3,7 @@ package com.trophy.entity;
 import java.util.Objects;
 
 public class Category {
-    private int id_category;
+    private int idCategory;
     private String category;
 
     public Category() {
@@ -13,8 +13,8 @@ public class Category {
         this.category = category;
     }
 
-    public Category(int id_category, String category) {
-        this.id_category = id_category;
+    public Category(int idCategory, String category) {
+        this.idCategory = idCategory;
         this.category = category;
     }
 
@@ -24,11 +24,11 @@ public class Category {
     }
 
     public int getId_category() {
-        return id_category;
+        return idCategory;
     }
 
-    public void setId_category(int id_category) {
-        this.id_category = id_category;
+    public void setId_category(int idCategory) {
+        this.idCategory = idCategory;
     }
 
     public String getCategory() {
@@ -42,7 +42,7 @@ public class Category {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 23 * hash + this.id_category;
+        hash = 23 * hash + this.idCategory;
         hash = 23 * hash + Objects.hashCode(this.category);
         return hash;
     }
@@ -59,7 +59,7 @@ public class Category {
             return false;
         }
         final Category other = (Category) obj;
-        if (this.id_category != other.id_category) {
+        if (this.idCategory != other.idCategory) {
             return false;
         }
         return Objects.equals(this.category, other.category);
