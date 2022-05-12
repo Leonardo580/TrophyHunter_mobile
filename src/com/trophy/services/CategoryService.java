@@ -49,7 +49,7 @@ public class CategoryService {
      //add
      public boolean addCategory(Category c){
         
-        String url =Statics.BASE_URL+"/addcat";
+        String url =Statics.BASE_URL+"addcat";
         req.setUrl(url);
         setRequest(c);
         req.addResponseListener((new ActionListener < NetworkEvent >() {
@@ -68,13 +68,15 @@ public class CategoryService {
     public ArrayList<Category>displayCategories(){
     ArrayList<Category> result = new ArrayList<>();
     
-    String url = Statics.BASE_URL+"/categoryjson";
+    String url = Statics.BASE_URL+"categoryjson";
     req.setUrl(url);
     req.addResponseListener((NetworkEvent evt) -> {
         JSONParser jsonp;
         jsonp = new JSONParser();
         
         try{
+            
+            if (req.getResponseData()!= null){
             Map<String,Object>mapcategories = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
             List<Map<String,Object>> listOfMaps = (List<Map<String,Object>>) mapcategories.get("root");
             
@@ -90,7 +92,7 @@ public class CategoryService {
                 result.add(cat);
                 
             }
-            
+            } 
         }   catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -104,7 +106,7 @@ public class CategoryService {
     }
     
     public boolean deletecategory(Category cat){
-    String url = Statics.BASE_URL+"/categorydelete";
+    String url = Statics.BASE_URL+"categorydelete";
     req.setUrl(url);
     req.addArgument("idCategory",String.valueOf(cat.getId_category()));
     req.addResponseListener(new ActionListener<NetworkEvent>(){
@@ -119,9 +121,13 @@ public class CategoryService {
         NetworkManager.getInstance().addToQueueAndWait(req);
         return resultOk;}
     
+     
+
+    
+    
     public boolean updatecategory(Category cat){
         
-         String url=Statics.BASE_URL+"/updatecat";
+         String url=Statics.BASE_URL+"updatecat";
         req.setUrl(url);
         setRequest(cat);
         

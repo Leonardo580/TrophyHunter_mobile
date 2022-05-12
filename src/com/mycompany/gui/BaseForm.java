@@ -63,6 +63,7 @@ public class BaseForm extends Form {
                         new Label(res.getImage("profile-pic.jpg"), "PictureWhiteBackgrond"))
         ));
         tb.addMaterialCommandToSideMenu("Products", FontImage.MATERIAL_GAMES, e -> new ProductForm(res).show());
+        tb.addMaterialCommandToSideMenu("Games", FontImage.MATERIAL_GAMES, e -> new GamesForm(res).show());
       tb.addMaterialCommandToSideMenu("Categories", FontImage.MATERIAL_GAMES, e -> new CategoryForm(res).show());
         tb.addMaterialCommandToSideMenu("Profile", FontImage.MATERIAL_SETTINGS, e -> new ProfileForm(res).show());
         tb.addMaterialCommandToSideMenu("Logout", FontImage.MATERIAL_EXIT_TO_APP, e -> new WalkthruForm(res).show());

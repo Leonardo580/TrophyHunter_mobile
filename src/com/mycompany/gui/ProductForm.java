@@ -58,8 +58,8 @@ public class ProductForm  extends BaseForm{
         
     for(Product p :list){
      EncodedImage eimg = EncodedImage.createFromImage(res.getImage("dog.jpg"), false);
-            Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"/uploads/product_images/"+ p.getImage(),
-                   Statics.BASE_URL+"/uploads/product_images/" +p.getImage(), URLImage.RESIZE_SCALE_TO_FILL);
+            Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"uploads/product_images/"+ p.getImage(),
+                   Statics.BASE_URL+"uploads/product_images/" +p.getImage(), URLImage.RESIZE_SCALE_TO_FILL);
             addButton(imgs, p.getProdName(), p.getPrice(),p);
         }
     add=SetUpAdd();
@@ -155,7 +155,7 @@ cnti.add(BorderLayout.CENTER,
             MultipartRequest cr = new MultipartRequest();
             String filePath = Capture.capturePhoto(Display.getInstance().getDisplayWidth(), -1);
 
-            cr.setUrl(Statics.BASE_URL+"/mobile/uploadImg");
+            cr.setUrl(Statics.BASE_URL+"mobile/uploadImgriri");
             cr.setPost(true);
             String mime = "image/"+filePath.substring(filePath.lastIndexOf(".")+1);
             try {

@@ -57,7 +57,7 @@ public class ProductService {
     
     public void addProduct(Product pro) {
 
-        String url = Statics.BASE_URL + "/mobile/add?"
+        String url = Statics.BASE_URL + "mobile/add?"
                 +"prodName="+pro.getProdName()
                 + "&description=" + pro.getDescription()
                 + "&price=" + pro.getPrice()
@@ -78,7 +78,7 @@ public class ProductService {
 
 //update
     
-     public boolean editCar(Product pro) {
+     public boolean update(Product pro) {
         String url ="http://127.0.0.1:8000/mobile/update";
         req.setUrl(url);
         setRequest(pro);
@@ -101,7 +101,7 @@ public class ProductService {
      public ArrayList<Product>displayProduct(){
     ArrayList<Product> result = new ArrayList<>();
     
-    String url = Statics.BASE_URL+"/mobile/display";
+    String url = Statics.BASE_URL+"mobile/display";
     req.setUrl(url);
     req.addResponseListener((NetworkEvent evt) -> {
         JSONParser jsonp;
@@ -154,7 +154,7 @@ public class ProductService {
      
      //delete
      public boolean deleteproduct(Product pro){
-    String url = Statics.BASE_URL+"/mobile/delete?idProduct="+pro.getIdProduct()+"";
+    String url = Statics.BASE_URL+"mobile/delete?idProduct="+pro.getIdProduct()+"";
     req.setUrl(url);
     req.addResponseListener(new ActionListener<NetworkEvent>(){
      @Override
