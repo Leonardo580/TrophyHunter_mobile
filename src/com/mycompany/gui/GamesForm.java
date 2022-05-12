@@ -48,16 +48,17 @@ public class GamesForm extends BaseForm{
         menuButton.addActionListener(e -> getToolbar().openSideMenu());
         getToolbar().setTitleComponent(menuButton);
         ArrayList<Games> games=GamesService.getInstance().getAllGames();
-        Container cnt=new Container(new GridLayout(2));
+        Container cnt=new Container(BoxLayout.y());
         cnt.setScrollableY(true);
+        //lazem minha bech tupdati
         Storage.getInstance().clearCache();
         for (Games g: games){
-            Container cn=new Container(BoxLayout.y());
+            Container cn=new Container(BoxLayout.x());
             EncodedImage eimg=EncodedImage.createFromImage(res.getImage("icon.png"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
                     Statics.BASE_URL+ g.getImg(),URLImage.RESIZE_SCALE);
 
-            ImageViewer imgv = new ImageViewer(imgs.scaled(300,800));
+            ImageViewer imgv = new ImageViewer(imgs.scaled(426,240));
 
            
             Label name=new Label(g.getName());
@@ -65,12 +66,12 @@ public class GamesForm extends BaseForm{
            name.setUIID("Label");
            name.setAutoSizeMode(true);
 
-            cn.addAll(imgv,name);
+          cn.addAll(imgv,name);
             Button btn=new Button();
             btn.addActionListener(l-> {
                 new TrophiesForm(res, g).show();
             });
-            cn.setLeadComponent(btn);
+           cn.setLeadComponent(btn);
             cnt.add(cn);
         }
         this.add(cnt);

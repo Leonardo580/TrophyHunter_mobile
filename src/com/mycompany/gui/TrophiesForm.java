@@ -78,7 +78,7 @@ public class TrophiesForm extends BaseForm{
                     }
            
             add(cnt);
-            embedVideo(g);
+            //embedVideo(g);
              getToolbar().addMaterialCommandToLeftBar("Back ", FontImage.MATERIAL_ARROW_BACK, e->{new GamesForm(res).show();});
             getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD, e->{addTrophy(g).show();});
            
