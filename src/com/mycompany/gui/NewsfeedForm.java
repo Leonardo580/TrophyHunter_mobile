@@ -79,7 +79,7 @@ public class NewsfeedForm extends BaseForm {
 
         Label spacer1 = new Label();
         Label spacer2 = new Label();
-        addTab(swipe, res.getImage("avatar-2.jpg"), spacer1, "15 Likes  ", "85 Comments", "Welcome to Trophy Hunter  ");
+        addTab(swipe, res.getImage("dog.jpg"), spacer1, "15 Likes  ", "85 Comments", "Welcome to Trophy Hunter  ");
         addTab(swipe, res.getImage("dog.jpg"), spacer2, "100 Likes  ", "66 Comments", "Dogs are cute: story at 11");
                 
         swipe.setUIID("Container");
@@ -167,7 +167,7 @@ public class NewsfeedForm extends BaseForm {
 //        
         for(Product p :list){
          Container cn=new Container(BoxLayout.y());
-          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("loading.jpg"),false);
+          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("dog.jpg"),false);
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),
                     Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),URLImage.RESIZE_SCALE_TO_FILL);
 //             ImageViewer imgv = new ImageViewer(imgs.scaledHeight(

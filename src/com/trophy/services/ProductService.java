@@ -104,14 +104,18 @@ public class ProductService {
     String url = Statics.BASE_URL+"mobile/display";
     req.setUrl(url);
     req.addResponseListener((NetworkEvent evt) -> {
-        JSONParser jsonp;
+       
+         JSONParser jsonp;
         jsonp = new JSONParser();
-        
         try{
+            
             Map<String,Object>mapproducts = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
             List<Map<String,Object>> listOfMaps = (List<Map<String,Object>>) mapproducts.get("root");
             
+           
+            
             for (Map<String,Object> obj: listOfMaps){
+               
                 Product p = new Product();
               float idProduct = Float.parseFloat(obj.get("idProduct").toString());
                p.setIdProduct(((int)idProduct));

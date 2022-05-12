@@ -76,8 +76,10 @@ public class CategoryService {
         
         try{
             
-            if (req.getResponseData()!= null){
-            Map<String,Object>mapcategories = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
+            
+            Map<String,Object>mapcategories = jsonp.parseJSON(
+                    new CharArrayReader(
+                            new String(req.getResponseData()).toCharArray()));
             List<Map<String,Object>> listOfMaps = (List<Map<String,Object>>) mapcategories.get("root");
             
             for (Map<String,Object> obj: listOfMaps){
@@ -92,7 +94,7 @@ public class CategoryService {
                 result.add(cat);
                 
             }
-            } 
+            
         }   catch (IOException ex) {
             ex.printStackTrace();
         }
