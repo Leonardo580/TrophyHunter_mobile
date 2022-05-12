@@ -18,6 +18,8 @@ import com.codename1.ui.layouts.BoxLayout;
 
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.util.Resources;
+import com.codename1.ui.validation.NumericConstraint;
+import com.codename1.ui.validation.Validator;
 import com.mycompany.gui.BaseForm;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
@@ -58,7 +60,9 @@ public class GamesForm extends BaseForm{
             Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+ g.getImg(),
                     Statics.BASE_URL+ g.getImg(),URLImage.RESIZE_SCALE);
 
-            ImageViewer imgv = new ImageViewer(imgs.scaled(426,240));
+            ImageViewer imgv = new ImageViewer(imgs.scaled(
+                    Display.getInstance().convertToPixels(16f*3),
+                    Display.getInstance().convertToPixels(9f*3)));
 
            
             Label name=new Label(g.getName());
@@ -71,7 +75,8 @@ public class GamesForm extends BaseForm{
             btn.addActionListener(l-> {
                 new TrophiesForm(res, g).show();
             });
-           cn.setLeadComponent(btn);
+           // imgs.addActionListener(l-> new TrophiesForm(res, g).show());
+          cn.setLeadComponent(btn);
             cnt.add(cn);
         }
         this.add(cnt);
@@ -98,11 +103,15 @@ public class GamesForm extends BaseForm{
             ));
             
         }
+
+        Validator v=new Validator();
+        v.addConstraint(tt.get(2), new NumericConstraint(true,0,100,"rate must be between 0 and 100"));
       /*  a.add(new Container(BoxLayout.x()).addAll(
                     new Label("Image"),new FileTree()
             ));*/
         Button btn=new Button("Add Game");
         btn.addActionListener(l-> {
+            if (v.isValid()){
             Games g=new Games();
             g.setName(tt.get(0).getText());
             g.setDescription(tt.get(1).getText());
@@ -131,6 +140,7 @@ public class GamesForm extends BaseForm{
             g.setImg("BackAssets\\images\\GameImgs\\"+g.getName() + ".jpg");
             GamesService.getInstance().addGame(g);
             new GamesForm(r).show();
+            }
         });
         a.add(btn);
         a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());

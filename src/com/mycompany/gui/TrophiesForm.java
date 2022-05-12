@@ -10,6 +10,8 @@ import com.codename1.io.MultipartRequest;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Storage;
 import com.codename1.ui.*;
+import com.codename1.ui.validation.LengthConstraint;
+import com.codename1.ui.validation.Validator;
 import com.mycompany.gui.GamesForm;
 import com.codename1.charts.renderers.DefaultRenderer;
 import com.codename1.components.FileTree;
@@ -114,6 +116,8 @@ public class TrophiesForm extends BaseForm{
         Container cnt=new Container(BoxLayout.y());
         TextField tt=new TextField();
         tt.setUIID("TextFieldBlack");
+        Validator v=new Validator();
+        v.addConstraint(tt, new LengthConstraint(10));
         TextField td=new TextField();
         td.setUIID("TextFieldBlack");
         ComboBox<String> cd=new ComboBox<>("Very Easy", "Easy", "Medium", "Hard", "Very Hard");
@@ -155,6 +159,8 @@ public class TrophiesForm extends BaseForm{
         Container cnt=new Container(BoxLayout.y());
         TextField tt=new TextField();
         tt.setUIID("TextFieldBlack");
+        Validator v=new Validator();
+        v.addConstraint(tt, new LengthConstraint(10));
         TextArea td=new TextArea();
         td.setUIID("TextFieldBlack");
         ComboBox<String> cd=new ComboBox<>("Very Easy", "Easy", "Medium", "Hard", "Very Hard");
@@ -165,12 +171,14 @@ public class TrophiesForm extends BaseForm{
         cp.setSelectedItem(t.getPlatform());
         cd.setSelectedItem(t.getDifficulty());
         btn.addActionListener(l-> {
-            t.setTitle(tt.getText());
-            t.setDescription(td.getText());
-            t.setPlatform(cp.getSelectedItem().toString());
-            t.setDifficulty(cd.getSelectedItem().toString());
-            TrophiesService.getInstance().updatetrophy(t);
-            new TrophiesForm(r,game ).show();
+            if (v.isValid()) {
+                t.setTitle(tt.getText());
+                t.setDescription(td.getText());
+                t.setPlatform(cp.getSelectedItem().toString());
+                t.setDifficulty(cd.getSelectedItem().toString());
+                TrophiesService.getInstance().updatetrophy(t);
+                new TrophiesForm(r, game).show();
+            }
         });
         cnt.addAll(new Label("Title", "Label")
                 ,tt,new Label("Description", "Label")
@@ -206,6 +214,7 @@ public class TrophiesForm extends BaseForm{
              a.add(new Container(BoxLayout.x()).addAll(
                     new Label(v, "Label"),t));
         }
+        tt.get(2).setConstraint(TextField.NUMERIC);
         tt.get(0).setText(g.getName());
         td.setText(g.getDescription());
         tt.get(2).setText(String.valueOf(g.getRate()));
