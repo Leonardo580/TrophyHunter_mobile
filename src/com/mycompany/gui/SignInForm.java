@@ -48,7 +48,7 @@ public class SignInForm extends BaseForm {
         getTitleArea().setUIID("Container");
         setUIID("SignIn");
         
-        add(BorderLayout.NORTH, new Label(res.getImage("Logo11.png"), "LogoLabel"));
+        add(BorderLayout.NORTH, new Label(res.getImage("logo11.png"), "LogoLabel"));
         
         TextField username = new TextField("", "Email", 20, TextField.EMAILADDR);
         TextField password = new TextField("", "Password", 20, TextField.PASSWORD);

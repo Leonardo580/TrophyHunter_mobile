@@ -4,9 +4,13 @@
  */
 package com.mycompany.gui;
 
+import com.codename1.capture.Capture;
+import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.ToastBar;
+import com.codename1.io.MultipartRequest;
+import com.codename1.io.NetworkManager;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Component;
@@ -14,15 +18,18 @@ import static com.codename1.ui.Component.BOTTOM;
 import static com.codename1.ui.Component.CENTER;
 import static com.codename1.ui.Component.RIGHT;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
 import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
+import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextArea;
+import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
@@ -36,6 +43,8 @@ import com.trophy.entity.Comment;
 import com.trophy.entity.News;
 import com.trophy.services.CommentsService;
 import com.trophy.services.NewsService;
+import com.trophy.utils.Statics;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -45,6 +54,7 @@ import java.util.ArrayList;
 public class CommentForm extends BaseForm{
     public CommentForm(Resources res) {
         super("Commentsfeed", BoxLayout.y());
+        
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
@@ -138,7 +148,12 @@ public class CommentForm extends BaseForm{
         for (Comment n: commentss){
         EncodedImage eimg=EncodedImage.createFromImage(res.getImage("welcome-slide-3.png"),false);
             //Image imgs = URLImage.createToStorage(eimg, n.getImgurl(),n.getImgurl());
-        addButton(n.getComcontent(),res.getImage("welcome-slide-3.png"), n.getLikes(), n.getNews().getNewsid());   } 
+        addButton(n.getComcontent(),res.getImage("welcome-slide-3.png"), n.getLikes());
+        getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_CIRCLE, ev -> SetUpAdd(res).show());
+        
+        } 
+        
+        
     }
 
  private void updateArrowPosition(Button b, Label arrow) {
@@ -194,12 +209,12 @@ private void addTab(Tabs swipe, Image img, Label spacer, String likesStr, String
         });
     }
 
-
-private void addButton(String comment,Image img, int likeCount,int idnews) {
+private void addButton(String comment,Image img, int likeCount) {
        int height = Display.getInstance().convertToPixels(11.5f);
        int width = Display.getInstance().convertToPixels(14f);
        Button image = new Button(img.fill(width, height));
-       image.setUIID("Label");
+       image
+.setUIID("Label");
        Container cnt = BorderLayout.west(image);
        cnt.setLeadComponent(image);
        TextArea ta = new TextArea(comment);
@@ -227,6 +242,45 @@ private void addButton(String comment,Image img, int likeCount,int idnews) {
        add(cnt);
        image.addActionListener(e -> ToastBar.showMessage(comment, FontImage.MATERIAL_INFO));
    }
+
+public Form SetUpAdd(Resources res){
+        Form a=new Form(BoxLayout.y());
+        String s[]={"Comment"};
+      ArrayList<TextField> tt=new ArrayList<>();
+        for (String v:s){
+            TextField t=new TextField(null, v);
+            t.setUIID("TextFieldBlack");
+            tt.add(t);
+            Label lab=new Label(v);
+            lab.setUIID("Label");
+            a.add(new Container(BoxLayout.x()).addAll(
+                    lab,t
+            ));
+            
+        }
+      /*  a.add(new Container(BoxLayout.x()).addAll(
+                    new Label("Image"),new FileTree()
+            ));*/
+        Button btn=new Button("Add comment");
+        btn.addActionListener(l-> {
+            Comment c=new Comment();
+            c.setComcontent(tt.get(0).getText());
+            c.setLikes(0);
+            
+           
+            //upload image
+            CommentsService.getInstance().addComment(c);
+            new NewsForm(res).show();
+        });
+        a.add(btn);
+        
+        Button menuButton = new Button("");
+        menuButton.setUIID("Title");
+        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+        a.getToolbar().setTitleComponent(menuButton);
+        return a;
+    }
 
 
 }

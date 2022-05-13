@@ -227,6 +227,14 @@ Container cnt=new Container(new GridLayout(2));
         Delete.setTextPosition(RIGHT);
         cnt.add(BorderLayout.EAST,Delete);
         Delete.addActionListener(e->{deletenews(res,n);});
+       Button update = new Button("Update");
+        
+        heartStyle.setFgColor(0xff050);
+        FontImage Updateimage = FontImage.createMaterial(FontImage.MATERIAL_ARROW_UPWARD, heartStyle);
+        update.setIcon(Updateimage);
+        update.setTextPosition(RIGHT);
+        cnt.add(BorderLayout.SOUTH,update);
+        update.addActionListener(e->{updateForm(res,n).show();});
         
          
         
@@ -345,5 +353,65 @@ public Form SetUpAdd(Resources res){
         a.getToolbar().setTitleComponent(menuButton);
         return a;
     }
+public Form updateForm(Resources res, News n){
+        Form a=new Form(BoxLayout.y());
+        String s[]={"Headline", "Content"};
+      ArrayList<TextField> tt=new ArrayList<>();
+        for (String v:s){
+            TextField t=new TextField(null, v);
+            t.setUIID("TextFieldBlack");
+            tt.add(t);
+            Label lab=new Label(v);
+            lab.setUIID("Label");
+            a.add(new Container(BoxLayout.x()).addAll(
+                    lab,t
+            ));
+            
+        }
+      /*  a.add(new Container(BoxLayout.x()).addAll(
+                    new Label("Image"),new FileTree()
+            ));*/
+      tt.get(0).setText(n.getHeadline());
+      tt.get(1).setText(n.getContent());
+        Button btn=new Button("update News");
+        btn.addActionListener(l-> {
+            
+            n.setHeadline(tt.get(0).getText());
+            n.setContent(tt.get(1).getText());
+           
+            //upload image
+            MultipartRequest cr = new MultipartRequest();
+            String filePath = Capture.capturePhoto(Display.getInstance().getDisplayWidth(), -1);
+
+            cr.setUrl(Statics.BASE_URL+"mobile/uploadImgriri");
+            cr.setPost(true);
+            String mime = "image/"+filePath.substring(filePath.lastIndexOf(".")+1);
+            try {
+                cr.addData("file", filePath, mime);
+            } catch (IOException ex) {
+                Dialog.show("Error", ex.getMessage(), "OK", null);
+            }
+            cr.setFilename("file", n.getHeadline());//any unique name you want
+
+            InfiniteProgress prog = new InfiniteProgress();
+            Dialog dlg = prog.showInifiniteBlocking();
+            cr.setDisposeOnCompletion(dlg);
+            NetworkManager.getInstance().addToQueueAndWait(cr);
+            //toufa houni
+           // Dialog.show("Success", "Image uploaded", "OK", null);
+            n.setImgurl("BackAssets\\images\\GameImgs\\"+n.getHeadline() + ".jpg");
+            NewsService.getInstance().updateNews(n);
+            new NewsForm(res).show();
+        });
+        a.add(btn);
+        a.getToolbar().addCommandToLeftSideMenu("Back", null, ev-> this.show());
+        Button menuButton = new Button("");
+        menuButton.setUIID("Title");
+        FontImage.setMaterialIcon(menuButton, FontImage.MATERIAL_MENU);
+        menuButton.addActionListener(e -> getToolbar().openSideMenu());
+        a.getToolbar().setTitleComponent(menuButton);
+        return a;
+    }
+
     
 }

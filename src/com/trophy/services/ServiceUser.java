@@ -258,5 +258,42 @@ public void addCompetitions(User competitions){
         
     NetworkManager.getInstance().addToQueueAndWait(req);//execution
 }
+public boolean deleteUser(int id) {
+        String url = Statics.BASE_URL + "deleteuser?id=" + id;
+
+        req.setUrl(url);
+
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+
+                req.removeResponseCodeListener(this);
+            }
+        });
+
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOk;
+    }
+
+    
+    
+        //Update 
+    public boolean updateUser (User u) {
+        String url = Statics.BASE_URL + "updateuser?id=" + u.getID_USER() +"&email="+u.getEMAIL();
+       
+        req.setUrl(url);
+
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOk = req.getResponseCode() == 200;  // Code response Http 200 ok
+                req.removeResponseListener(this);
+            }
+        });
+
+        NetworkManager.getInstance().addToQueueAndWait(req);//execution ta3 request sinon yet3ada chy dima nal9awha
+        return resultOk;
+
+    }
     
 }

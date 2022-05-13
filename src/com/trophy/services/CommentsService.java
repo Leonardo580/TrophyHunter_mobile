@@ -38,7 +38,8 @@ public class CommentsService {
     }
     private void setRequest(Comment c){
         req.addArgument("comment",String.valueOf(c.getComcontent()));
-        req.addArgument("likes",String.valueOf(c.getLikes()));
+//        req.addArgument("likes",String.valueOf(0));
+        req.addArgument("idnews",String.valueOf(47));
         
         
     }
@@ -100,5 +101,23 @@ public ArrayList<Comment> parseJSON(String jsonText) throws  IOException{
             
         }
         return comments;
+    }
+
+
+public boolean addComment(Comment c){
+        String url=Statics.BASE_URL+"mobile/addComments";
+        req.setUrl(url);
+        setRequest(c);
+        req.addResponseListener((new ActionListener < NetworkEvent >() {
+            @Override
+            public void actionPerformed(NetworkEvent arg0) {
+                resultOk=req.getResponseCode()==200;
+            req.removeResponseListener(this);
+            }
+        })
+            
+        );
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOk;
     }
 }

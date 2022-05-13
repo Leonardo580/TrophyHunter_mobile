@@ -69,7 +69,7 @@ public class NewsfeedForm extends BaseForm {
         Toolbar tb = new Toolbar(true);
         setToolbar(tb);
         getTitleArea().setUIID("Container");
-        setTitle("Shop Management");
+        setTitle("Welcome to Trophy Hunter");
         getContentPane().setScrollVisible(false);
         
         super.addSideMenu(res);
@@ -165,21 +165,21 @@ public class NewsfeedForm extends BaseForm {
         ArrayList<Product>list = ProductService.getInstance().displayProduct();
         
 //        
-        for(Product p :list){
-         Container cn=new Container(BoxLayout.y());
-          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("dog.jpg"),false);
-            Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),
-                    Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),URLImage.RESIZE_SCALE_TO_FILL);
-//             ImageViewer imgv = new ImageViewer(imgs.scaledHeight(
-//                    Display.getInstance().getDisplayHeight()/3
-//            ));
-            ImageViewer imgv = new ImageViewer(imgs.scaled(500, 500));
-        Label name=new Label(p.getProdName());
-        name.setUIID("Label");
-         Label desc =new Label(p.getDescription());
-       cn.addAll(imgv,name);
-        cnt.add(cn);
-        }
+//        for(Product p :list){
+//         Container cn=new Container(BoxLayout.y());
+//          EncodedImage eimg=EncodedImage.createFromImage(res.getImage("dog.jpg"),false);
+//            Image imgs = URLImage.createToStorage(eimg, Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),
+//                    Statics.BASE_URL+"/uploads/product_images/"+p.getImage(),URLImage.RESIZE_SCALE_TO_FILL);
+////             ImageViewer imgv = new ImageViewer(imgs.scaledHeight(
+////                    Display.getInstance().getDisplayHeight()/3
+////            ));
+//            ImageViewer imgv = new ImageViewer(imgs.scaled(500, 500));
+//        Label name=new Label(p.getProdName());
+//        name.setUIID("Label");
+//         Label desc =new Label(p.getDescription());
+//       cn.addAll(imgv,name);
+//        cnt.add(cn);
+//        }
         
         
               
