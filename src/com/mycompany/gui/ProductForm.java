@@ -110,13 +110,13 @@ cnti.add(BorderLayout.CENTER,
 
                 if (ProductService.getInstance().deleteproduct(pro)) {
                     {
-                        new SignInForm(r).show();
+                        new ProductForm(r).show();
                         
                         //Dialog.show("Success", "product " + pro.getProdName() + " is deleted !! ", new Command("OK"));
                     }
                 }
             } else {
-                ProductUpdateForm t = new ProductUpdateForm(pro);
+                ProductUpdateForm t = new ProductUpdateForm(r,pro);
                 t.show();
             }
 //Dialog.show("hiiii","ok",null);

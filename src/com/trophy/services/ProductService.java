@@ -26,18 +26,20 @@ import java.util.Map;
  * @author rihab bns
  */
 public class ProductService {
+    
     public  boolean resultOk;
-    public static ProductService instance = null;
+    public static ProductService instance =null ;
     public ArrayList<Product>products;
     private ConnectionRequest req;
      private void setRequest(Product p){
          req.addArgument("idProduct",String.valueOf(p.getIdProduct()));
+          req.addArgument("prodName",String.valueOf(p.getProdName()));
          req.addArgument("description",String.valueOf(p.getDescription()));
-         req.addArgument("price",String.valueOf(p.getDescription()));
+         req.addArgument("price",String.valueOf(p.getPrice()));
          req.addArgument("discount",String.valueOf(p.getDiscount()));
-         req.addArgument("Quantity",String.valueOf(p.getQuantity()));
+         req.addArgument("quantity",String.valueOf(p.getQuantity()));
          req.addArgument("category",String.valueOf(p.getCategory().getCategory()));
-         req.addArgument("img",String.valueOf(p.getImage()));
+        
            
      }
     
@@ -93,30 +95,22 @@ public class ProductService {
         return resultOk;
     }
 
-    
-    
-    
-    //display
-    
-     public ArrayList<Product>displayProduct(){
-    ArrayList<Product> result = new ArrayList<>();
-    
-    String url = Statics.BASE_URL+"mobile/display";
-    req.setUrl(url);
-    req.addResponseListener((NetworkEvent evt) -> {
-       
-         JSONParser jsonp;
-        jsonp = new JSONParser();
-        try{
+    public ArrayList<Product> parseJSON(String jsonText) throws  IOException{
+         try {
+             
+          products=new ArrayList<>();
             
-            Map<String,Object>mapproducts = jsonp.parseJSON(new CharArrayReader(new String(req.getResponseData()).toCharArray()));
-            List<Map<String,Object>> listOfMaps = (List<Map<String,Object>>) mapproducts.get("root");
-            
+            JSONParser j = new JSONParser();
+            Map<String,Object> gamesListJson = 
+               j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
            
+            List<Map<String,Object>> list = (List<Map<String,Object>>)gamesListJson.get("root");
+           products.clear();
+//             ObjectMapper ob=new ObjectMapper();
+//             JsonNode jn=ob.readTree(Json);
             
-            for (Map<String,Object> obj: listOfMaps){
-               
-                Product p = new Product();
+            for(Map<String,Object> obj : list){
+                 Product p = new Product();
               float idProduct = Float.parseFloat(obj.get("idProduct").toString());
                p.setIdProduct(((int)idProduct));
               String prodName = obj.get("prodName").toString();
@@ -140,16 +134,40 @@ public class ProductService {
               p.setImage(image);
                 //int id_category = Integer.parseInt(obj.get("idCategory").toString());
                 //float price = Float.parseFloat(obj.get("price).toString());
-               result.add(p);
+               products.add(p);
+                  
             }
             
-        }   catch (IOException ex) {
-            ex.printStackTrace();
+            
+        } catch (IOException ex) {
+            
         }
-    });
-        NetworkManager.getInstance().addToQueueAndWait(req);
+        return products;
+    }
     
-          return result;
+    
+    //display
+    
+     public ArrayList<Product>displayProduct(){
+    
+    
+   String url = Statics.BASE_URL+"mobile/display";
+    req.setUrl(url);
+ req.setUrl(url);
+        req.addResponseListener(new ActionListener<NetworkEvent>() {
+             @Override
+             public void actionPerformed(NetworkEvent arg0) {
+              try {
+                 products= parseJSON(new String(req.getResponseData()));
+              }
+             catch (IOException ex) {
+                     //Logger.getLogger(GamesService.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+            req.removeResponseListener(this);
+             }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return products;
     
     
     
