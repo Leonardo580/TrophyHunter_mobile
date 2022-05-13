@@ -105,7 +105,7 @@ public class TeamsForm extends BaseForm{
         TextField tt=new TextField();
         tt.setUIID("TextFieldBlack");
         Validator v=new Validator();
-        v.addConstraint(tt, new LengthConstraint(10));
+        v.addConstraint(tt, new LengthConstraint(4));
         TextField td=new TextField();
         td.setUIID("TextFieldBlack");
         Button btn=new Button("Add Teams");

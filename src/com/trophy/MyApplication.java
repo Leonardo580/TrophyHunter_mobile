@@ -14,10 +14,11 @@ import com.codename1.ui.Toolbar;
 import java.io.IOException;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.io.NetworkEvent;
+import com.mycompany.gui.MapForm;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.entity.Trophies;
-import com.mycompany.gui.GamesForm;
+
 import com.mycompany.gui.SignInForm;
 import com.trophy.gui.LoginForm;
 import com.trophy.services.GamesService;
@@ -60,12 +61,14 @@ public class MyApplication {
             current.show();
             return;
         }
-        Form hi = new Form("Hi World", BoxLayout.y());
-        hi.add(new Label("Hi World"));
-         new SignInForm(theme).show();
+        new MapForm(theme,new SignInForm(theme));
+//        Form hi = new Form("Hi World", BoxLayout.y());
+//        hi.add(new Label("Hi World"));
+//         new SignInForm(theme).show();
+
         
         
-    }
+    } 
 
     public void stop() {
         current = getCurrentForm();
