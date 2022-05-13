@@ -17,6 +17,7 @@ import com.codename1.io.NetworkEvent;
 import com.mycompany.gui.DisplayCategory;
 import com.mycompany.gui.SignInForm;
 import com.mycompany.gui.addProductForm;
+import com.mycompany.gui.registration;
 import com.trophy.entity.Category;
 import com.trophy.entity.Games;
 import com.trophy.services.GamesService;

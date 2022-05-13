@@ -23,14 +23,18 @@ import com.codename1.components.FloatingHint;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.util.Resources;
+import com.trophy.services.ServiceUser;
 
 /**
  * Signup UI
@@ -52,12 +56,14 @@ public class SignUpForm extends BaseForm {
         TextField username = new TextField("", "Username", 20, TextField.ANY);
         TextField email = new TextField("", "E-Mail", 20, TextField.EMAILADDR);
         TextField password = new TextField("", "Password", 20, TextField.PASSWORD);
-        TextField confirmPassword = new TextField("", "Confirm Password", 20, TextField.PASSWORD);
+        //TextField confirmPassword = new TextField("", "Confirm Password", 20, TextField.PASSWORD);
         username.setSingleLineTextArea(false);
         email.setSingleLineTextArea(false);
         password.setSingleLineTextArea(false);
-        confirmPassword.setSingleLineTextArea(false);
+        //confirmPassword.setSingleLineTextArea(false);
         Button next = new Button("Next");
+        Button signUpb = new Button("signUp");
+
         Button signIn = new Button("Sign In");
         signIn.addActionListener(e -> previous.showBack());
         signIn.setUIID("Link");
@@ -71,7 +77,7 @@ public class SignUpForm extends BaseForm {
                 createLineSeparator(),
                 new FloatingHint(password),
                 createLineSeparator(),
-                new FloatingHint(confirmPassword),
+                //new FloatingHint(confirmPassword),
                 createLineSeparator()
         );
         content.setScrollableY(true);
@@ -83,5 +89,7 @@ public class SignUpForm extends BaseForm {
         next.requestFocus();
         next.addActionListener(e -> new ActivateForm(res).show());
     }
+
+    }
     
-}
+

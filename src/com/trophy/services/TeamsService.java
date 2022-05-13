@@ -43,8 +43,8 @@ public static TeamsService instance = null;
     
             public void addTeams(Teams teams){
         
-        String url =Statics.BASE_URL+"mobile/addTeams=" 
-                +teams.getCompetitions().getGame_name()
+        String url =Statics.BASE_URL+"mobile/addTeams?" 
+                +"idCompetion="+teams.getCompetitions().getId_competion()
                 +"&teamName="+teams.getTeam_name();
            
         req.setUrl(url);

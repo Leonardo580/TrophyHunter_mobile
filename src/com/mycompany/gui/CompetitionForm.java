@@ -83,6 +83,7 @@ public class CompetitionForm extends BaseForm{
    //     setupSideMenu(res);     
         addSideMenu(res);
         getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_CIRCLE, ev -> add.show());
+        getToolbar().addMaterialCommandToLeftBar(null, FontImage.MATERIAL_ADD_MODERATOR, ev -> new MapForm(res, this));
         getToolbar().setVisible(true);
        
     }
